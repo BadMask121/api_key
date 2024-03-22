@@ -3,6 +3,3 @@ A Rust utility for generating API keys including random strings, UUIDs, and keys
 
 This is inspired by Chizi implementation in Dart https://github.com/Zfinix/generate_api_key
 Rust port of https://github.com/pauldenver/generate-api-key
-
-  [] Prefix
-  [] Suffix
