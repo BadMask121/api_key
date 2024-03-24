@@ -1,9 +1,9 @@
 use rand::Rng;
-use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{Default, StringGenerationOptions}, utils::add_prefix};
+use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{Default, StringGenerator}, utils::add_prefix};
 
-impl Default for StringGenerationOptions {
+impl Default for StringGenerator {
     fn default() -> Self {
-        StringGenerationOptions { 
+        StringGenerator { 
           min: DEFAULT_MIN_LENGTH,
           max: DEFAULT_MAX_LENGTH,
           pool: get_default_character(),
@@ -13,8 +13,8 @@ impl Default for StringGenerationOptions {
     }
 }
 
-impl StringGenerationOptions {
-  fn new() -> Self {
+impl StringGenerator {
+  pub fn new() -> Self {
     Self {
       ..Default::default()
     }
@@ -44,41 +44,49 @@ fn generate_random_string(pool: &String, length: u8) -> String {
 
 #[cfg(test)]
 mod tests {
-  use crate::types::{self, StringGenerationOptions};
+  use crate::types::{self, StringGenerator};
 
   #[test]
   fn test_random_string_with_prefix(){
-    let options = StringGenerationOptions {
+    let options = StringGenerator {
       prefix: String::from("PREFIX-"),
       ..types::Default::default()
     };
 
-    let result = StringGenerationOptions::gen(&options);
+    let result = options.gen();
     assert!(&result.starts_with("PREFIX"));
   }
 
   #[test]
   fn test_random_string_with_min_max() {
-    let options = StringGenerationOptions {
+    let options = StringGenerator {
       min: 5,
       max: 8,
       ..types::Default::default()
     };
 
-    let result = StringGenerationOptions::gen(&options);
+    let result = options.gen();
     let result_length = result.len();
     assert!(result_length >= 5 && result_length <= 8);
   }
 
   #[test]
   fn test_random_string_with_length() {
-    let options = StringGenerationOptions {
+    let options = StringGenerator {
       length: Some(10),
       ..types::Default::default()
     };
 
-    let result = StringGenerationOptions::gen(&options);
+    let result = options.gen();
 
     assert!(result.len() >= 10);
+  }
+
+  #[test]
+  fn test_random_string_with_defaults() {
+    let options = StringGenerator::new();
+    let result = options.gen();
+
+    assert!(result.len() >= 16 && result.len() <= 32 );
   }
 }

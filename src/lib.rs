@@ -12,13 +12,15 @@ mod random_string;
 mod random_bytes;
 
 pub mod generate_api_keys {
-  use crate::{ random_bytes, random_string, types::{BytesGenerationOptions, StringGenerationOptions, Default}};
+  use std::mem::ManuallyDrop;
 
-  fn string(options: StringGenerationOptions) -> String {
-    StringGenerationOptions::gen(&options)
+  use crate:: types::{BytesGenerator, GenerationMethods, StringGenerator};
+
+  fn string(options: StringGenerator) -> String {
+    StringGenerator::gen(&options)
   }
 
-  fn bytes(options: BytesGenerationOptions) -> String {
-    BytesGenerationOptions::gen(&options)
+  fn bytes(options: BytesGenerator) -> String {
+    BytesGenerator::gen(&options)
   }
 }

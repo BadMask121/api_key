@@ -1,10 +1,10 @@
 use rand::Rng;
 use hex;
-use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{BytesGenerationOptions, Default }, utils::add_prefix};
+use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{BytesGenerator, Default }, utils::add_prefix};
 
-impl Default for BytesGenerationOptions {
+impl Default for BytesGenerator {
     fn default() -> Self {
-        BytesGenerationOptions { 
+        BytesGenerator { 
           min: DEFAULT_MIN_LENGTH,
           max: DEFAULT_MAX_LENGTH,
           prefix: "".to_string(),
@@ -13,7 +13,7 @@ impl Default for BytesGenerationOptions {
     }
 }
 
-impl BytesGenerationOptions {
+impl BytesGenerator {
   pub fn new() -> Self {
     Self {
       ..Default::default()
@@ -42,28 +42,28 @@ fn generate_random_bytes(length: u8) -> String {
 
 #[cfg(test)]
 mod tests {
-  use crate::types::{self, BytesGenerationOptions};
+  use crate::types::{self, BytesGenerator};
 
   #[test]
   fn test_random_bytes_with_prefix(){
-    let options = BytesGenerationOptions {
+    let options = BytesGenerator {
       prefix: String::from("PREFIX-"),
       ..types::Default::default()
     };
 
-    let result = BytesGenerationOptions::gen(&options);
+    let result = BytesGenerator::gen(&options);
     assert!(&result.starts_with("PREFIX"));
   }
 
   #[test]
   fn test_random_bytes_with_min_max() {
-    let options = BytesGenerationOptions {
+    let options = BytesGenerator {
       min: 10,
       max: 20,
       ..types::Default::default()
     };
 
-    let result = BytesGenerationOptions::gen(&options);
+    let result = BytesGenerator::gen(&options);
     let result_length = result.len() / 2;
 
     assert!(result_length >= 10 && result_length <= 20);
@@ -71,12 +71,12 @@ mod tests {
 
   #[test]
   fn test_random_bytes_with_length() {
-    let options = BytesGenerationOptions {
+    let options = BytesGenerator {
       length: Some(10),
       ..types::Default::default()
     };
 
-    let result = BytesGenerationOptions::gen(&options);
+    let result = BytesGenerator::gen(&options);
 
     assert!(result.len() >= 10);
   }
