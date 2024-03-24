@@ -14,11 +14,11 @@ pub enum GenerationMethods{
  */
 #[derive(Clone, Debug)]
 pub struct StringGenerationOptions {
-  pub min: Option<u8>,
-  pub max: Option<u8>,
+  pub min: u8,
+  pub max: u8,
   pub length: Option<u8>,
-  pub pool: Option<String>,
-  pub prefix: Option<String>,
+  pub pool: String,
+  pub prefix: String,
   // pub batch: String,
 }
 
@@ -27,8 +27,8 @@ pub struct StringGenerationOptions {
  */
 #[derive(Clone)]
 pub struct BytesGenerationOptions  {
-  pub min: Option<u8>,
-  pub max: Option<u8>,
+  pub min: u8,
+  pub max: u8,
   pub length: Option<u8>,
   pub prefix: String,
   // pub batch: String,
@@ -64,4 +64,8 @@ pub struct UuidV5GenerationOptions {
   // pub batch: String,
   pub name: String,
   pub namespace: String,
+}
+
+pub trait Default {
+  fn default() -> Self;
 }
