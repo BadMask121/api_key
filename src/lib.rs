@@ -12,8 +12,6 @@ mod random_string;
 mod random_bytes;
 
 pub mod generate_api_keys {
-  use std::mem::ManuallyDrop;
-
   use crate:: types::{BytesGenerator, GenerationMethods, StringGenerator};
 
   fn string(options: StringGenerator) -> String {
