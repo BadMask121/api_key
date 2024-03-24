@@ -1,16 +1,19 @@
+use crate::{
+  constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH},
+  types::{BytesGenerator, Default},
+  utils::{add_prefix, random_bytes, to_hex},
+};
 use rand::Rng;
-use hex;
-use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{BytesGenerator, Default }, utils::add_prefix};
 
 impl Default for BytesGenerator {
-    fn default() -> Self {
-        BytesGenerator { 
-          min: DEFAULT_MIN_LENGTH,
-          max: DEFAULT_MAX_LENGTH,
-          prefix: "".to_string(),
-          length: None
-        }
+  fn default() -> Self {
+    BytesGenerator {
+      min: DEFAULT_MIN_LENGTH,
+      max: DEFAULT_MAX_LENGTH,
+      prefix: "".to_string(),
+      length: None,
     }
+  }
 }
 
 impl BytesGenerator {
@@ -21,28 +24,23 @@ impl BytesGenerator {
   }
 
   pub fn gen(&self) -> String {
-    let length:usize = match self.length {
-          Some(l) => l.into(),
-          None => {
-            rand::thread_rng().gen_range(self.min ..=self.max).into()
-          }
-      };
+    let length: usize = match self.length {
+      Some(l) => l.into(),
+      None => rand::thread_rng().gen_range(self.min..=self.max).into(),
+    };
 
     // splice byte string to same amount of length
     // since bytes string == length * 2
-    
+
     let byte_splice = &generate_random_bytes(length)[..length];
 
-    add_prefix( &mut String::from(byte_splice), &self.prefix)
+    add_prefix(&mut String::from(byte_splice), &self.prefix)
   }
 }
 
 fn generate_random_bytes(length: usize) -> String {
-
-  let random_bytes: Vec<u8> = (0..length).map(|_| rand::thread_rng().gen()).collect();
-
   // Convert bytes to hexadecimal string
-  hex::encode(&random_bytes)
+  to_hex(&random_bytes(length))
 }
 
 #[cfg(test)]
@@ -50,7 +48,7 @@ mod tests {
   use crate::types::{self, BytesGenerator};
 
   #[test]
-  fn test_random_bytes_with_prefix(){
+  fn test_random_bytes_with_prefix() {
     let options = BytesGenerator {
       prefix: String::from("PREFIX-"),
       ..types::Default::default()

@@ -8,8 +8,9 @@ mod types;
 mod utils;
 
 
-mod random_string;
-mod random_bytes;
+mod string;
+mod bytes;
+mod base32;
 
 pub mod generate_api_keys {
   use crate:: types::{BytesGenerator, GenerationMethods, StringGenerator};
