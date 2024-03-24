@@ -15,11 +15,18 @@ dependencies = [
 name = "api_key"
 version = "0.1.0"
 dependencies = [
+ "base-x",
  "base32",
  "rand",
  "regex",
  "uuid",
 ]
+
+[[package]]
+name = "base-x"
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4cbbc9d0964165b47557570cce6c952866c2678457aca742aafc9fb771d30270"
 
 [[package]]
 name = "base32"

@@ -69,6 +69,7 @@ impl Base32Generator {
           true => key.join("-"),
           _ => key.join(""),
         };
+
         add_prefix(&mut api_key, &self.prefix)
       } else {
         panic!("unable to generate base32 api key")
