@@ -21,18 +21,23 @@ impl BytesGenerator {
   }
 
   pub fn gen(&self) -> String {
-    let length = match self.length {
-          Some(l) => l,
+    let length:usize = match self.length {
+          Some(l) => l.into(),
           None => {
-            rand::thread_rng().gen_range(self.min ..=self.max)
+            rand::thread_rng().gen_range(self.min ..=self.max).into()
           }
       };
 
-    add_prefix( &mut generate_random_bytes(length), &self.prefix)
+    // splice byte string to same amount of length
+    // since bytes string == length * 2
+    
+    let byte_splice = &generate_random_bytes(length)[..length];
+
+    add_prefix( &mut String::from(byte_splice), &self.prefix)
   }
 }
 
-fn generate_random_bytes(length: u8) -> String {
+fn generate_random_bytes(length: usize) -> String {
 
   let random_bytes: Vec<u8> = (0..length).map(|_| rand::thread_rng().gen()).collect();
 
@@ -64,7 +69,7 @@ mod tests {
     };
 
     let result = BytesGenerator::gen(&options);
-    let result_length = result.len() / 2;
+    let result_length = result.len();
 
     assert!(result_length >= 10 && result_length <= 20);
   }
