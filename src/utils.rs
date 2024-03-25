@@ -57,18 +57,18 @@ pub fn uuid5(bytes: [u8; 16]) -> String {
 }
 
 pub trait Utility {
-  fn batch(&self) -> String {
-    (0..self.batch_len()).map(|_| self.generate()).collect()
+  fn batch(&self) -> Vec<String> {
+    (0..self.batch_len()).map(|_| self.gen()).collect()
   }
 
   /**
    * generator function
-   */
-  fn generate(&self) -> String;
+  */
+  fn gen(&self) -> String;
 
   /**
    * batch length
-   */
+  */
   fn batch_len(&self) -> u8;
 }
 
@@ -76,7 +76,7 @@ pub trait Utility {
  * Utility trait declaration
 */
 impl Utility for UuidV5Generator {
-  fn generate(&self) -> String {
+  fn gen(&self) -> String {
     self.gen()
   }
 
@@ -86,7 +86,7 @@ impl Utility for UuidV5Generator {
 }
 
 impl Utility for UuidV4Generator {
-  fn generate(&self) -> String {
+  fn gen(&self) -> String {
     self.gen()
   }
 
@@ -96,7 +96,7 @@ impl Utility for UuidV4Generator {
 }
 
 impl Utility for StringGenerator {
-  fn generate(&self) -> String {
+  fn gen(&self) -> String {
     self.gen()
   }
 
@@ -106,7 +106,7 @@ impl Utility for StringGenerator {
 }
 
 impl Utility for BytesGenerator {
-  fn generate(&self) -> String {
+  fn gen(&self) -> String {
     self.gen()
   }
 
@@ -116,7 +116,7 @@ impl Utility for BytesGenerator {
 }
 
 impl Utility for Base32Generator {
-  fn generate(&self) -> String {
+  fn gen(&self) -> String {
     self.gen()
   }
 
@@ -125,12 +125,12 @@ impl Utility for Base32Generator {
   }
 }
 
-// impl Utility for Base62Generator {
-//   fn generate(&self) -> String {
-//     self.gen()
-//   }
+impl Utility for Base62Generator {
+  fn gen(&self) -> String {
+    self.gen()
+  }
 
-//   fn batch_len(&self) -> u8 {
-//     self.batch
-//   }
-// }
+  fn batch_len(&self) -> u8 {
+    self.batch
+  }
+}

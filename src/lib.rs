@@ -32,9 +32,9 @@ pub mod generate_api_keys {
     get_result(options)
   }
 
-  // pub fn base62(options: Base62Generator) -> ApiKeyResults {
-  //   get_result(options)
-  // }
+  pub fn base62(options: Base62Generator) -> ApiKeyResults {
+    get_result(options)
+  }
 
   pub fn uuid4(options: UuidV4Generator) -> ApiKeyResults {
     get_result(options)
@@ -42,38 +42,52 @@ pub mod generate_api_keys {
 
   pub fn uuid5(options: UuidV5Generator) -> ApiKeyResults {
     get_result(options)
-
   }
 
   fn get_result<T: Utility>(options: T) -> ApiKeyResults {
     match options.batch_len() > 0 {
-      true => ApiKeyResults::String(Utility::batch(&options)),
-      false => ApiKeyResults::String(options.generate()),
+      true => ApiKeyResults::StringArray(Utility::batch(&options)),
+      false => ApiKeyResults::String(options.gen()),
     }
   }
 }
 
 #[cfg(test)]
-mod tests {
+mod api_key_test {
   use crate::{
     generate_api_keys,
-    types::{Default, UuidV5Generator},
+    types::{ApiKeyResults, Default, StringGenerator},
   };
 
   #[test]
-  fn generate_string_api_key() -> String {
-    let api_key: String = generate_api_keys::string(options).into();
-    println!("{:?}", api_key);
-  }
-
-  #[test]
-  fn generate_uuid5_api_key() -> String {
-    let options = UuidV5Generator {
-      batch: 2,
+  fn generate_batch_string_api_key() {
+    let options = StringGenerator {
+      length: Some(2),
+      batch: 3,
       ..Default::default()
     };
 
-    let api_key: String = generate_api_keys::uuid5(options).into();
-    println!("{:?}", api_key);
+    let api_key: ApiKeyResults = generate_api_keys::string(options);
+
+    assert!(match api_key {
+      ApiKeyResults::StringArray(d) => d.len() == 3,
+      _ => false,
+    })
+  }
+
+  #[test]
+  fn generate_string_api_key() {
+    let options = StringGenerator {
+      length: Some(2),
+      prefix: String::from("PREFIX"),
+      ..Default::default()
+    };
+
+    let api_key: ApiKeyResults = generate_api_keys::string(options);
+
+    assert!(match api_key {
+      ApiKeyResults::String(d) => d.starts_with("PREFIX"),
+      _ => false,
+    })
   }
 }

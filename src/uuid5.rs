@@ -14,10 +14,6 @@ impl Default for UuidV5Generator {
   }
 }
 
-fn times2() -> String {
-  String::from("he")
-}
-
 impl UuidV5Generator {
   pub fn new() -> Self {
     Self {
@@ -54,7 +50,7 @@ mod tests {
 
   use crate::{
     types::{self, UuidV5Generator},
-    utils::{uuid4, Utility},
+    utils::Utility,
   };
 
   #[test]
@@ -81,7 +77,7 @@ mod tests {
   }
 
   #[test]
-  fn generate_key_without_dashes() {
+  fn generate_key_without_dashes_and_with_namespace() {
     let options = UuidV5Generator {
       dashes: false,
       namespace: Some(*Uuid::NAMESPACE_DNS.as_bytes()),
@@ -93,18 +89,20 @@ mod tests {
   }
 
   #[test]
-  fn generate_key_with_namespace() {
-    let id = "a1a2a3a4-b1b2-c1c2-d1d2-d3d4d5d6d7d8";
-
+  fn generate_key_with_dashes_and_with_namespace() {
     let options = UuidV5Generator {
-      batch: 0,
-      namespace: Some(*Uuid([id.as_bytes()])),
+      dashes: true,
+      namespace: Some(*Uuid::NAMESPACE_URL.as_bytes()),
       ..types::Default::default()
     };
 
     let result = UuidV5Generator::gen(&options);
-    println!("{:?}", result);
-    assert!(result.contains("-"))
+    assert!(match Uuid::parse_str(&result) {
+      Ok(_) => true,
+      Err(_) => false,
+    });
+
+    assert!(result.contains("-"));
   }
 
   #[test]
@@ -116,8 +114,10 @@ mod tests {
     };
 
     let result = UuidV5Generator::gen(&options);
-    println!("{:?}", result);
-    assert!(result.contains("-"))
+    assert!(match Uuid::parse_str(&result) {
+      Ok(_) => true,
+      Err(_) => false,
+    })
   }
 
   #[test]
@@ -129,7 +129,6 @@ mod tests {
     };
 
     let result = Utility::batch(&options);
-    println!("{:?}", result);
-    assert!(result.contains("-"))
+    assert!(result.len() == 2)
   }
 }

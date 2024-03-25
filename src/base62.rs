@@ -13,11 +13,18 @@ impl Default for Base62Generator {
 }
 
 impl Base62Generator {
-  pub fn gen() -> String {
+  pub fn new() -> Self {
+    Self {
+      batch: 0,
+      ..Default::default()
+    }
+  }
+
+  pub fn gen(&self) -> String {
     Self::gen_key(None)
   }
 
-  pub fn mock_gen(input: String) -> String {
+  fn mock_gen(input: String) -> String {
     Self::gen_key(Some(input))
   }
 
@@ -44,13 +51,13 @@ impl Base62Generator {
 mod tests {
   use std::str::from_utf8;
 
-  use crate::constants::get_base62_char_pool;
+  use crate::{constants::get_base62_char_pool, types::Base62Generator};
 
   #[test]
   fn generate_base62_string() {
     let dictionary = &get_base62_char_pool();
     let mock_input = "a70392c855ee4df5aa2eb2ea47c57af4";
-    let encoded = super::mock_gen(mock_input.to_owned());
+    let encoded = Base62Generator::mock_gen(mock_input.to_owned());
 
     let binding = base_x::decode(&dictionary[..], &encoded).unwrap();
     let decoded = binding.as_slice();

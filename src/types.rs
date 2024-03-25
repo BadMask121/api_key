@@ -14,7 +14,7 @@ pub struct StringGenerator {
 /**
  * Generation options for the "bytes" method.
 */
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct BytesGenerator {
   pub min: u8,
   pub max: u8,
@@ -26,7 +26,7 @@ pub struct BytesGenerator {
 /**
  * Generation options for the "base32" method.
 */
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Base32Generator {
   pub dashes: bool,
   pub prefix: String,
@@ -36,6 +36,7 @@ pub struct Base32Generator {
 /**
  * Generation options for the "base62" method.
 */
+#[derive(Clone, Debug)]
 pub struct Base62Generator {
   pub batch: u8,
 }
@@ -43,7 +44,7 @@ pub struct Base62Generator {
 /**
  * Generation options for the "uuidv4" method.
 */
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct UuidV4Generator {
   pub dashes: bool,
   pub prefix: String,
@@ -65,6 +66,7 @@ pub trait Default {
   fn default() -> Self;
 }
 
+#[derive(Clone, Debug)]
 pub enum ApiKeyResults {
   String(String),
   StringArray(Vec<String>),
