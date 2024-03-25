@@ -1,5 +1,5 @@
 use crate::{
-  constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH},
+  constants::{DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH},
   types::{BytesGenerator, Default},
   utils::{add_prefix, random_bytes, to_hex},
 };
@@ -12,6 +12,7 @@ impl Default for BytesGenerator {
       max: DEFAULT_MAX_LENGTH,
       prefix: "".to_string(),
       length: None,
+      batch: 0,
     }
   }
 }

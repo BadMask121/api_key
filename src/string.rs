@@ -2,13 +2,14 @@ use rand::Rng;
 use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{Default, StringGenerator}, utils::add_prefix};
 
 impl Default for StringGenerator {
-    fn default() -> Self {
+  fn default() -> Self {
         StringGenerator { 
           min: DEFAULT_MIN_LENGTH,
           max: DEFAULT_MAX_LENGTH,
           pool: get_default_character(),
           prefix: "".to_string(),
-          length: None
+          length: None,
+          batch: 0,
         }
     }
 }

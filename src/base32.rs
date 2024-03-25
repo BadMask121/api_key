@@ -1,22 +1,22 @@
 use crate::{
   types::{Base32Generator, Default},
-  utils::{add_prefix, random_bytes, to_base32},
+  utils::{add_prefix, random_16_bytes, to_base32, uuid4},
 };
 use regex::Regex;
-use uuid::{Builder, Variant, Version};
 
 impl Default for Base32Generator {
   fn default() -> Self {
     Base32Generator {
       prefix: "".to_string(),
       dashes: false,
+      batch: 0,
     }
   }
 }
 
 /**
  * Base32 using Crockford hashing
- */
+*/
 impl Base32Generator {
   pub fn new() -> Self {
     Self {
@@ -25,12 +25,8 @@ impl Base32Generator {
   }
 
   pub fn gen(&self) -> String {
-    let bytes: [u8; 16] = random_bytes(16).try_into().unwrap();
-    let uuid = Builder::from_bytes(bytes)
-      .with_variant(Variant::RFC4122)
-      .with_version(Version::Random)
-      .into_uuid()
-      .to_string();
+    let bytes: [u8; 16] = random_16_bytes();
+    let uuid = uuid4(bytes);
 
     // split uuid into different parts
     let uuid_parts = uuid.split("-").into_iter();
@@ -103,7 +99,6 @@ mod tests {
     };
 
     let result = Base32Generator::gen(&options);
-    println!("{}", result);
     assert!(result.contains("-"))
   }
 }
