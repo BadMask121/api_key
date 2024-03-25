@@ -4,13 +4,20 @@ A Rust utility for generating API keys including random strings, UUIDs, and keys
 Rust port of https://github.com/pauldenver/generate-api-key
 
 
-# Example for generating random string
+# Example for generating random string with prefix
 
 ```rust
-let username = StringGenerator {
-  min: 10,
-  max: 20
-};
+ let options = StringGenerator {
+    prefix: String::from("PREFIX"),
+    ..StringGenerator::default()
+  };
 
-username.gen();
+  let key: ApiKeyResults = api_key::string(options);
+
+  assert!(match key {
+    ApiKeyResults::String(d) => d.starts_with("PREFIX"),
+    _ => false,
+  })
 ```
+- [ ] improve crate documentation
+- [ ] improve README
