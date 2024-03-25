@@ -78,13 +78,13 @@ impl Base32Generator {
 
 #[cfg(test)]
 mod tests {
-  use crate::types::{self, Base32Generator};
+  use crate::types::{ Base32Generator, Default};
 
   #[test]
   fn generate_key_with_prefix() {
     let options = Base32Generator {
       prefix: String::from("PREFIX-"),
-      ..types::Default::default()
+      ..Base32Generator::default()
     };
 
     let result = Base32Generator::gen(&options);
@@ -95,7 +95,7 @@ mod tests {
   fn generate_key_with_dashes() {
     let options = Base32Generator {
       dashes: true,
-      ..types::Default::default()
+      ..Base32Generator::default()
     };
 
     let result = Base32Generator::gen(&options);

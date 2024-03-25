@@ -11,7 +11,7 @@ impl Default for BytesGenerator {
       min: DEFAULT_MIN_LENGTH,
       max: DEFAULT_MAX_LENGTH,
       prefix: "".to_string(),
-      length: None,
+      length: 0,
       batch: 0,
     }
   }
@@ -25,9 +25,10 @@ impl BytesGenerator {
   }
 
   pub fn gen(&self) -> String {
-    let length: usize = match self.length {
-      Some(l) => l.into(),
-      None => rand::thread_rng().gen_range(self.min..=self.max).into(),
+    let length: usize = if self.length > 0 {
+      self.length.into()
+    } else {
+      rand::thread_rng().gen_range(self.min..=self.max).into()
     };
 
     // splice byte string to same amount of length
@@ -46,13 +47,13 @@ fn generate_random_bytes(length: usize) -> String {
 
 #[cfg(test)]
 mod tests {
-  use crate::types::{self, BytesGenerator};
+  use crate::types::{BytesGenerator, Default};
 
   #[test]
   fn test_random_bytes_with_prefix() {
     let options = BytesGenerator {
       prefix: String::from("PREFIX-"),
-      ..types::Default::default()
+      ..BytesGenerator::default()
     };
 
     let result = BytesGenerator::gen(&options);
@@ -64,7 +65,7 @@ mod tests {
     let options = BytesGenerator {
       min: 10,
       max: 20,
-      ..types::Default::default()
+      ..BytesGenerator::default()
     };
 
     let result = BytesGenerator::gen(&options);
@@ -76,8 +77,8 @@ mod tests {
   #[test]
   fn test_random_bytes_with_length() {
     let options = BytesGenerator {
-      length: Some(10),
-      ..types::Default::default()
+      length: 10,
+      ..BytesGenerator::default()
     };
 
     let result = BytesGenerator::gen(&options);

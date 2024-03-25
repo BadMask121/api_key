@@ -5,7 +5,7 @@
 pub struct StringGenerator {
   pub min: u8,
   pub max: u8,
-  pub length: Option<u8>,
+  pub length: u8,
   pub pool: String,
   pub prefix: String,
   pub batch: u8,
@@ -18,7 +18,7 @@ pub struct StringGenerator {
 pub struct BytesGenerator {
   pub min: u8,
   pub max: u8,
-  pub length: Option<u8>,
+  pub length: u8,
   pub prefix: String,
   pub batch: u8,
 }

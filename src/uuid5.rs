@@ -49,7 +49,7 @@ mod tests {
   use uuid::Uuid;
 
   use crate::{
-    types::{self, UuidV5Generator},
+    types::{Default, UuidV5Generator},
     utils::Utility,
   };
 
@@ -58,7 +58,7 @@ mod tests {
     let options = UuidV5Generator {
       prefix: String::from("PREFIX-"),
       namespace: Some(*Uuid::NAMESPACE_DNS.as_bytes()),
-      ..types::Default::default()
+      ..UuidV5Generator::default()
     };
 
     let result = UuidV5Generator::gen(&options);
@@ -69,7 +69,7 @@ mod tests {
   fn generate_key_with_dashes() {
     let options = UuidV5Generator {
       namespace: Some(*Uuid::NAMESPACE_DNS.as_bytes()),
-      ..types::Default::default()
+      ..UuidV5Generator::default()
     };
 
     let result = UuidV5Generator::gen(&options);
@@ -81,7 +81,7 @@ mod tests {
     let options = UuidV5Generator {
       dashes: false,
       namespace: Some(*Uuid::NAMESPACE_DNS.as_bytes()),
-      ..types::Default::default()
+      ..UuidV5Generator::default()
     };
 
     let result = UuidV5Generator::gen(&options);
@@ -93,7 +93,7 @@ mod tests {
     let options = UuidV5Generator {
       dashes: true,
       namespace: Some(*Uuid::NAMESPACE_URL.as_bytes()),
-      ..types::Default::default()
+      ..UuidV5Generator::default()
     };
 
     let result = UuidV5Generator::gen(&options);
@@ -108,7 +108,7 @@ mod tests {
     let options = UuidV5Generator {
       batch: 2,
       namespace: None,
-      ..types::Default::default()
+      ..UuidV5Generator::default()
     };
 
     let result = UuidV5Generator::gen(&options);
@@ -123,7 +123,7 @@ mod tests {
     let options = UuidV5Generator {
       batch: 2,
       namespace: None,
-      ..types::Default::default()
+      ..UuidV5Generator::default()
     };
 
     let result = Utility::batch(&options);

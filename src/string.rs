@@ -1,17 +1,21 @@
+use crate::{
+  constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH},
+  types::{Default, StringGenerator},
+  utils::add_prefix,
+};
 use rand::Rng;
-use crate::{constants::{get_default_character, DEFAULT_MAX_LENGTH, DEFAULT_MIN_LENGTH}, types::{Default, StringGenerator}, utils::add_prefix};
 
 impl Default for StringGenerator {
   fn default() -> Self {
-        StringGenerator { 
-          min: DEFAULT_MIN_LENGTH,
-          max: DEFAULT_MAX_LENGTH,
-          pool: get_default_character(),
-          prefix: "".to_string(),
-          length: None,
-          batch: 0,
-        }
+    StringGenerator {
+      min: DEFAULT_MIN_LENGTH,
+      max: DEFAULT_MAX_LENGTH,
+      pool: get_default_character(),
+      prefix: "".to_string(),
+      length: 0,
+      batch: 0,
     }
+  }
 }
 
 impl StringGenerator {
@@ -22,36 +26,38 @@ impl StringGenerator {
   }
 
   pub fn gen(&self) -> String {
-    let length = match self.length {
-          Some(l) => l,
-          None => {
-            rand::thread_rng().gen_range(self.min ..=self.max)
-          }
-      };
+    let length = if self.length > 0 {
+      self.length
+    } else {
+      rand::thread_rng().gen_range(self.min..=self.max)
+    };
 
-    add_prefix( &mut generate_random_string(&self.pool, length), &self.prefix)
+    add_prefix(
+      &mut generate_random_string(&self.pool, length),
+      &self.prefix,
+    )
   }
 }
 
 fn generate_random_string(pool: &String, length: u8) -> String {
   let mut rng = rand::thread_rng();
   (0..length)
-      .map(|_| {
-          let idx = rng.gen_range(0..pool.len());
-          pool.chars().nth(idx).unwrap()
-      })
-      .collect()
+    .map(|_| {
+      let idx = rng.gen_range(0..pool.len());
+      pool.chars().nth(idx).unwrap()
+    })
+    .collect()
 }
 
 #[cfg(test)]
 mod tests {
-  use crate::types::{self, StringGenerator};
+  use crate::types::{Default, StringGenerator};
 
   #[test]
-  fn test_random_string_with_prefix(){
+  fn test_random_string_with_prefix() {
     let options = StringGenerator {
       prefix: String::from("PREFIX-"),
-      ..types::Default::default()
+      ..StringGenerator::default()
     };
 
     let result = options.gen();
@@ -63,7 +69,7 @@ mod tests {
     let options = StringGenerator {
       min: 5,
       max: 8,
-      ..types::Default::default()
+      ..StringGenerator::default()
     };
 
     let result = options.gen();
@@ -74,8 +80,8 @@ mod tests {
   #[test]
   fn test_random_string_with_length() {
     let options = StringGenerator {
-      length: Some(10),
-      ..types::Default::default()
+      length: 10,
+      ..StringGenerator::default()
     };
 
     let result = options.gen();
@@ -88,6 +94,6 @@ mod tests {
     let options = StringGenerator::new();
     let result = options.gen();
 
-    assert!(result.len() >= 16 && result.len() <= 32 );
+    assert!(result.len() >= 16 && result.len() <= 32);
   }
 }

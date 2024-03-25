@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#[warn(unused_comparisons)]
 
 mod constants;
 mod types;
@@ -11,7 +12,7 @@ mod string;
 mod uuid4;
 mod uuid5;
 
-pub mod generate_api_keys {
+pub mod api_key {
   use crate::{
     types::{
       ApiKeyResults, Base32Generator, Base62Generator, BytesGenerator, StringGenerator,
@@ -56,21 +57,21 @@ pub mod generate_api_keys {
 #[cfg(test)]
 mod api_key_test {
   use crate::{
-    generate_api_keys,
+    api_key,
     types::{ApiKeyResults, Default, StringGenerator, UuidV4Generator},
   };
 
   #[test]
   fn generate_batch_string_api_key() {
     let options = StringGenerator {
-      length: Some(2),
+      length: 2,
       batch: 3,
-      ..Default::default()
+      ..StringGenerator::default()
     };
 
-    let api_key: ApiKeyResults = generate_api_keys::string(options);
+    let key: ApiKeyResults = api_key::string(options);
 
-    assert!(match api_key {
+    assert!(match key {
       ApiKeyResults::StringArray(d) => d.len() == 3,
       _ => false,
     })
@@ -79,14 +80,14 @@ mod api_key_test {
   #[test]
   fn generate_string_api_key() {
     let options = StringGenerator {
-      length: Some(2),
+      length: 2,
       prefix: String::from("PREFIX"),
-      ..Default::default()
+      ..StringGenerator::default()
     };
 
-    let api_key: ApiKeyResults = generate_api_keys::string(options);
+    let key: ApiKeyResults = api_key::string(options);
 
-    assert!(match api_key {
+    assert!(match key {
       ApiKeyResults::String(d) => d.starts_with("PREFIX"),
       _ => false,
     })
@@ -96,12 +97,12 @@ mod api_key_test {
   fn generate_uuid4_api_key() {
     let options = UuidV4Generator {
       prefix: String::from("PREFIX"),
-      ..Default::default()
+      ..UuidV4Generator::default()
     };
 
-    let api_key: ApiKeyResults = generate_api_keys::uuid4(options);
+    let key: ApiKeyResults = api_key::uuid4(options);
 
-    assert!(match api_key {
+    assert!(match key {
       ApiKeyResults::String(res) => res.starts_with("PREFIX") && res.contains("-"),
       _ => false,
     })

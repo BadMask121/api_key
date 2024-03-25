@@ -13,7 +13,7 @@ impl Default for UuidV4Generator {
   }
 }
 
-impl UuidV4Generator {
+impl UuidV4Generator  {
   pub fn new() -> Self {
     Self {
       ..Default::default()
@@ -35,13 +35,13 @@ impl UuidV4Generator {
 
 #[cfg(test)]
 mod tests {
-  use crate::types::{self, UuidV4Generator};
+  use crate::types::{Default, UuidV4Generator};
 
   #[test]
   fn generate_key_with_prefix() {
     let options = UuidV4Generator {
       prefix: String::from("PREFIX-"),
-      ..types::Default::default()
+      ..UuidV4Generator::default()
     };
 
     let result = UuidV4Generator::gen(&options);
@@ -51,7 +51,7 @@ mod tests {
   #[test]
   fn generate_key_with_dashes() {
     let options = UuidV4Generator {
-      ..types::Default::default()
+      ..UuidV4Generator::default()
     };
 
     let result = UuidV4Generator::gen(&options);
@@ -62,7 +62,7 @@ mod tests {
   fn generate_key_without_dashes() {
     let options = UuidV4Generator {
       dashes: false,
-      ..types::Default::default()
+      ..UuidV4Generator::default()
     };
 
     let result = UuidV4Generator::gen(&options);
