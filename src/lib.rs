@@ -45,9 +45,10 @@ pub mod generate_api_keys {
   }
 
   fn build<T: Utility>(options: T) -> ApiKeyResults {
-    match options.batch_len() > 0 {
-      true => ApiKeyResults::StringArray(Utility::batch(&options)),
-      false => ApiKeyResults::String(options.gen()),
+    if options.batch_len() > 0 {
+      ApiKeyResults::StringArray(Utility::batch(&options))
+    } else {
+      ApiKeyResults::String(options.gen())
     }
   }
 }
