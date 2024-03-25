@@ -21,30 +21,30 @@ pub mod generate_api_keys {
   };
 
   pub fn string(options: StringGenerator) -> ApiKeyResults {
-    get_result(options)
+    build(options)
   }
 
   pub fn bytes(options: BytesGenerator) -> ApiKeyResults {
-    get_result(options)
+    build(options)
   }
 
   pub fn base32(options: Base32Generator) -> ApiKeyResults {
-    get_result(options)
+    build(options)
   }
 
   pub fn base62(options: Base62Generator) -> ApiKeyResults {
-    get_result(options)
+    build(options)
   }
 
   pub fn uuid4(options: UuidV4Generator) -> ApiKeyResults {
-    get_result(options)
+    build(options)
   }
 
   pub fn uuid5(options: UuidV5Generator) -> ApiKeyResults {
-    get_result(options)
+    build(options)
   }
 
-  fn get_result<T: Utility>(options: T) -> ApiKeyResults {
+  fn build<T: Utility>(options: T) -> ApiKeyResults {
     match options.batch_len() > 0 {
       true => ApiKeyResults::StringArray(Utility::batch(&options)),
       false => ApiKeyResults::String(options.gen()),
@@ -56,7 +56,7 @@ pub mod generate_api_keys {
 mod api_key_test {
   use crate::{
     generate_api_keys,
-    types::{ApiKeyResults, Default, StringGenerator},
+    types::{ApiKeyResults, Default, StringGenerator, UuidV4Generator},
   };
 
   #[test]
@@ -87,6 +87,21 @@ mod api_key_test {
 
     assert!(match api_key {
       ApiKeyResults::String(d) => d.starts_with("PREFIX"),
+      _ => false,
+    })
+  }
+
+  #[test]
+  fn generate_uuid4_api_key() {
+    let options = UuidV4Generator {
+      prefix: String::from("PREFIX"),
+      ..Default::default()
+    };
+
+    let api_key: ApiKeyResults = generate_api_keys::uuid4(options);
+
+    assert!(match api_key {
+      ApiKeyResults::String(res) => res.starts_with("PREFIX") && res.contains("-"),
       _ => false,
     })
   }

@@ -98,11 +98,9 @@ mod tests {
 
     let result = UuidV5Generator::gen(&options);
     assert!(match Uuid::parse_str(&result) {
-      Ok(_) => true,
+      Ok(_) => result.contains("-"),
       Err(_) => false,
     });
-
-    assert!(result.contains("-"));
   }
 
   #[test]
