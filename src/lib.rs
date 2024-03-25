@@ -1,8 +1,14 @@
 #![allow(dead_code)]
 #[warn(unused_comparisons)]
+use crate::{
+  types::{
+    ApiKeyResults, Base32Generator, Base62Generator, BytesGenerator, StringGenerator,
+    UuidV4Generator, UuidV5Generator,
+  },
+  utils::Utility,
+};
 
 mod constants;
-mod types;
 mod utils;
 
 mod base32;
@@ -12,53 +18,46 @@ mod string;
 mod uuid4;
 mod uuid5;
 
-pub mod api_key {
-  use crate::{
-    types::{
-      ApiKeyResults, Base32Generator, Base62Generator, BytesGenerator, StringGenerator,
-      UuidV4Generator, UuidV5Generator,
-    },
-    utils::Utility,
-  };
+pub mod types;
 
-  pub fn string(options: StringGenerator) -> ApiKeyResults {
-    build(options)
-  }
+pub fn string(options: StringGenerator) -> ApiKeyResults {
+  build(options)
+}
 
-  pub fn bytes(options: BytesGenerator) -> ApiKeyResults {
-    build(options)
-  }
+pub fn bytes(options: BytesGenerator) -> ApiKeyResults {
+  build(options)
+}
 
-  pub fn base32(options: Base32Generator) -> ApiKeyResults {
-    build(options)
-  }
+pub fn base32(options: Base32Generator) -> ApiKeyResults {
+  build(options)
+}
 
-  pub fn base62(options: Base62Generator) -> ApiKeyResults {
-    build(options)
-  }
+pub fn base62(options: Base62Generator) -> ApiKeyResults {
+  build(options)
+}
 
-  pub fn uuid4(options: UuidV4Generator) -> ApiKeyResults {
-    build(options)
-  }
+pub fn uuid4(options: UuidV4Generator) -> ApiKeyResults {
+  build(options)
+}
 
-  pub fn uuid5(options: UuidV5Generator) -> ApiKeyResults {
-    build(options)
-  }
+pub fn uuid5(options: UuidV5Generator) -> ApiKeyResults {
+  build(options)
+}
 
-  fn build<T: Utility>(options: T) -> ApiKeyResults {
-    if options.batch_len() > 0 {
-      ApiKeyResults::StringArray(Utility::batch(&options))
-    } else {
-      ApiKeyResults::String(options.gen())
-    }
+fn build<T: Utility>(options: T) -> ApiKeyResults {
+  if options.batch_len() > 0 {
+    ApiKeyResults::StringArray(Utility::batch(&options))
+  } else {
+    ApiKeyResults::String(options.gen())
   }
 }
 
 #[cfg(test)]
 mod api_key_test {
   use crate::{
-    api_key,
+    string,
     types::{ApiKeyResults, Default, StringGenerator, UuidV4Generator},
+    uuid4,
   };
 
   #[test]
@@ -69,7 +68,7 @@ mod api_key_test {
       ..StringGenerator::default()
     };
 
-    let key: ApiKeyResults = api_key::string(options);
+    let key: ApiKeyResults = string(options);
 
     assert!(match key {
       ApiKeyResults::StringArray(d) => d.len() == 3,
@@ -85,7 +84,7 @@ mod api_key_test {
       ..StringGenerator::default()
     };
 
-    let key: ApiKeyResults = api_key::string(options);
+    let key: ApiKeyResults = string(options);
 
     assert!(match key {
       ApiKeyResults::String(d) => d.starts_with("PREFIX"),
@@ -100,7 +99,7 @@ mod api_key_test {
       ..UuidV4Generator::default()
     };
 
-    let key: ApiKeyResults = api_key::uuid4(options);
+    let key: ApiKeyResults = uuid4(options);
 
     assert!(match key {
       ApiKeyResults::String(res) => res.starts_with("PREFIX") && res.contains("-"),
