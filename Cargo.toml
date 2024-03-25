@@ -2,6 +2,9 @@
 name = "api_key"
 version = "0.1.0"
 edition = "2021"
+authors = ["Jeffrey Emakpor"]
+description = "Generate api key in rust supports base32, base62, string, uuid4, uuid5"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
